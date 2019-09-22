@@ -7,7 +7,6 @@ var imgList = [
 ];
 
 // 画像とナビの要素を自動で追加(スライドショーの画像タグを作成)
-
 for(var i = 0; i < imgList.length; i++) {
 	// li要素を取得
 	var slide = document.createElement("li");
@@ -39,6 +38,7 @@ var dotNavigation = document.getElementsByClassName("nav")[0]
 .getElementsByTagName("li");
 // 「現在○○枚目のスライドを表示している」というインデックス番号を格納する変数
 var nowIndex = 0;
+
 // 現在表示されている画像とドットナビにクラス名を付ける
 imageSlide[nowIndex].classList.add("show");
 dotNavigation[nowIndex].classList.add("current");
@@ -47,7 +47,15 @@ dotNavigation[nowIndex].classList.add("current");
 // スライドのsetTimeoutを管理するタイマー
 
 // スライド切り替え時に呼び出す関数
-
+function sliderSlide(val) {
+	// 現在表示している画像とドットナビからクラス名を削除
+	imageSlide[nowIndex].classList.remove("show");
+	dotNavigation[nowIndex].classList.remove("current");
+	nowIndex = val;
+	// 次に表示する画像とナビにクラス名を付与
+	imageSlide[nowIndex].classList.add("show");
+	dotNavigation[nowIndex].classList.add("current");
+}
 }
 
 
