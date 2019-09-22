@@ -25,11 +25,10 @@ var nav = document.createElement("li");
 nav.setAttribute("data-nav-index", i);
 	// li要素をクラス名「nav」の子要素として追加(ドットナビ追加)
 document.getElementsByClassName("nav") [0].appendChild(nav);
-
-
+}
 
 // スライドの数を取得(処理のために-1する)
-
+var length = imgList.length - 1;
 // クラス名「imageSlide」に画像の1枚の要素を格納
 var imageSlide = document.getElementsByClassName("slider-inner")[0]
 .getElementsByTagName("li");
@@ -43,11 +42,17 @@ var nowIndex = 0;
 imageSlide[nowIndex].classList.add("show");
 dotNavigation[nowIndex].classList.add("current");
 // スライドがアニメーション中か判断するフラグ
-
+var isChanging = false;
 // スライドのsetTimeoutを管理するタイマー
-
+var slideTimer;
 // スライド切り替え時に呼び出す関数
 function sliderSlide(val) {
+	// スライド中なら画像の切り替えをしない（if分)
+	if (isChanging === true) {
+		return false;
+	}
+	// スライド中
+	isChanging = true;
 	// 現在表示している画像とドットナビからクラス名を削除
 	imageSlide[nowIndex].classList.remove("show");
 	dotNavigation[nowIndex].classList.remove("current");
@@ -55,42 +60,44 @@ function sliderSlide(val) {
 	// 次に表示する画像とナビにクラス名を付与
 	imageSlide[nowIndex].classList.add("show");
 	dotNavigation[nowIndex].classList.add("current");
+
+	// アニメーションが終わるタイミングでisChangingのステータスをfalseに
+	slideTimer = setTimeout(function(){
+		isChanging = false;
+	}, 600);
 }
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 // 左矢印のナビをクリックした時のイベント
-
-
-
-
-
+document.getElementById("arrow-prev").addEventListener("click", function(){
+	// 前の画像の番号
+	var index = nowIndex -1;
+	// 先頭の画像表示から前へ移動すると末尾の画像に移動
+	if(index < 0) {
+		index = length;
+	} 
+	sliderSlide(index);
+}, false);
 
 
 // 右矢印のナビをクリックした時のイベント
-
-
-
-
-
-
+document.getElementById("arrow-next").addEventListener("click", function(){
+	// 次の画像の番号
+	var index = nowIndex + 1;
+	// 末尾の画像を表示した状態で次に移動すると先頭の画像に移動
+	if(index > length){
+		index = 0;
+	}
+	sliderSlide(index);
+}, false);
 
 // ドットナビをクリックした時のイベントを作成
-
+for(var i = 0; i < dotNavigation.length; i++) {
+	// データ属性のインデックス番号を元にスライドを行う
+	dotNavigation[i].addEventListener("click", function(){
+		var index = Number(this.getAttribute("data-nav-index"));
+		sliderSlide(index);
+	}, false);
+}
 
 
 
